@@ -226,7 +226,7 @@ public class FluidVelocityData
     {
         var index = GetIndex(x, y, z);
         //return new Vector3(velocity[index].x / 0.3117167144E-03f, velocity[index].y / 0.3117167144E-03f, velocity[index].z / 0.3117167144E-03f);
-        return new Vector3(velocity[index].x / 0.01f, velocity[index].y / 0.01f, velocity[index].z / 0.01f);
+        return new Vector3(velocity[index].x, velocity[index].y, velocity[index].z) / 0.001f;
     }
 
     // We expect lines in the format:

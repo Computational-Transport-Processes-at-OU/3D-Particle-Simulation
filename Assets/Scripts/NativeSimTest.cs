@@ -7,12 +7,12 @@ public class NativeSimTest : MonoBehaviour
 {
     System.Random rand = new System.Random();
 
+    public bool destroyOutOfBounds = true;
+    static int NUM_PARTICLES = 1000; // Specify how many particles to show 
     public string geometryFilePath = "3D_reconstruction_NEW.txt";
     public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
-    public bool destroyOutOfBounds = true;
     public Material voxelMaterial = null;
     public PhysicMaterial geometryPhysic = null;
-    const int NUM_PARTICLES = 1000; // Specify how many particles to show (1000 is the max currently)
 
     GeometryData geometryData = new GeometryData();
     FluidVelocityData velocityData = new FluidVelocityData();
@@ -322,7 +322,7 @@ public class NativeSimTest : MonoBehaviour
             particleGameObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             particleGameObjects[i].name = "Particle " + i;
             particleGameObjects[i].tag = "Particle";
-            //particleGameObjects[i].transform.SetParent(gameObject.transform);
+            particleGameObjects[i].transform.SetParent(gameObject.transform);
             particleGameObjects[i].AddComponent<ParticleHandling>();
             particleGameObjects[i].GetComponent<SphereCollider>().sharedMaterial = geometryPhysic;
             Rigidbody rbody = particleGameObjects[i].AddComponent<Rigidbody>();
@@ -335,6 +335,11 @@ public class NativeSimTest : MonoBehaviour
 
     private void Update()
     {
+        
+    }
+    
+    private void FixedUpdate()
+    {
         // Make sure the particles don't go out of bounds
         for (int i = 0; i < NUM_PARTICLES; ++i)
         {
@@ -342,69 +347,79 @@ public class NativeSimTest : MonoBehaviour
             // X
             if (rBody.position.x < 0)
             {
-                if (destroyOutOfBounds) {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else {
-                    rBody.position = new Vector3(0, rBody.position.y, rBody.position.z);
+                else
+                {
+                    rBody.position = new Vector3(200, rBody.position.y, rBody.position.z);
                 }
             }
-            if (rBody.position.x >= 200) {
-                if (destroyOutOfBounds) {
+            if (rBody.position.x >= 200)
+            {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else {
-                    rBody.position = new Vector3(rBody.position.x - 200, rBody.position.y, rBody.position.z);
+                else
+                {
+                    rBody.position = new Vector3(0, rBody.position.y, rBody.position.z);
                 }
             }
             // Y
             if (rBody.position.y < 0)
             {
-                if (destroyOutOfBounds) {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else {
-                    rBody.position = new Vector3(rBody.position.x, 0, rBody.position.z);
+                else
+                {
+                    rBody.position = new Vector3(rBody.position.x, 200, rBody.position.z);
                 }
             }
             if (rBody.position.y >= 200)
             {
-                if (destroyOutOfBounds) {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else {
-                    rBody.position = new Vector3(rBody.position.x, rBody.position.y - 200, rBody.position.z);
+                else
+                {
+                    rBody.position = new Vector3(rBody.position.x, 0, rBody.position.z);
                 }
             }
             // Z
             if (rBody.position.z < 0)
             {
-                if (destroyOutOfBounds) {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else { 
-                    rBody.position = new Vector3(rBody.position.x, rBody.position.y, 0);
+                else
+                {
+                    rBody.position = new Vector3(rBody.position.x, rBody.position.y, 200);
                 }
             }
             if (rBody.position.z >= 200)
             {
-                if (destroyOutOfBounds) {
+                if (destroyOutOfBounds)
+                {
                     Destroy(rBody);
                 }
-                else {
-                    rBody.position = new Vector3(rBody.position.x, rBody.position.y, rBody.position.z - 200);
+                else
+                {
+                    rBody.position = new Vector3(rBody.position.x, rBody.position.y, 0);
                 }
             }
         }
-    }
-    
-    private void FixedUpdate()
-    {
+
         // Set the particles' velocity based on their position
         for (int i = 0; i < NUM_PARTICLES; ++i)
         {
             Rigidbody rBody = particleGameObjects[i].GetComponent<Rigidbody>();
-            rBody.velocity = velocityData.GetVelocityAt((int)rBody.position.x, (int)rBody.position.y, (int)rBody.position.z);
+            rBody.velocity = velocityData.GetVelocityAt((int)Math.Floor(rBody.position.x), (int)Math.Floor(rBody.position.y), (int)Math.Floor(rBody.position.z));
         }
 
         var dt = Time.deltaTime;

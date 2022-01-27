@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 89185242}
   - component: {fileID: 89185241}
   - component: {fileID: 89185243}
+  - component: {fileID: 89185244}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -153,9 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f7de65d6e22084d9c858f4ab1fc36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyOutOfBounds: 0
   geometryFilePath: 3D_reconstruction_NEW.txt
   velocityFilePath: TECPLOT_CONVERGED_global_velocity_field.txt
-  destroyOutOfBounds: 0
   voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}
   geometryPhysic: {fileID: 13400000, guid: 40f7fe1393a185948851980b23dda12a, type: 2}
 --- !u!224 &89185242
@@ -190,6 +191,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16be029a5631ef74b8a29b826854688d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &89185244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89185240}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3520cc11b4071744b0be077dd602ab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  geometryFilePath: 3D_reconstruction_NEW.txt
+  trajectoryFilePath: Particle_trajectories_THOUSAND.txt
+  voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}
+  particleMaterial: {fileID: 2100000, guid: 8ffac0de7ebb65643a7ec742c523a0d1, type: 2}
+  frameDurationSeconds: 1
 --- !u!1 &388270814
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +924,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1490052836
 RectTransform:
   m_ObjectHideFlags: 0
