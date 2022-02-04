@@ -17,7 +17,7 @@ public class Test : MonoBehaviour
     public string trajectoryFilePath = "Particle_trajectories_THOUSAND.txt";
     public Material voxelMaterial = null, particleMaterial = null;
     public float frameDurationSeconds = 1f;
-    float timestep = 0.3117167144E-03f;
+    //float timestep = 0.3117167144E-03f;
     const int NUM_PARTICLES = 500; // Specify how many particles to show (1000 is the max currently)
 
     GeometryData geometryData = new GeometryData();
