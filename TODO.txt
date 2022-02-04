@@ -6,3 +6,6 @@ TASKS TODO:
 [ ] In new Particle class, set up OnCollision functions
 [ ] In new Particle class, set up Update functions
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
+[ ] Rate of aggregation; probability for particles to stick together
+[ ] Smooth surface of geometry
+[ ] Improve velocity interpolation
