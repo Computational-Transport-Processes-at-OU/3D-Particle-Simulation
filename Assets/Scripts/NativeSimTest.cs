@@ -7,22 +7,14 @@ public class NativeSimTest : MonoBehaviour
 {
     System.Random rand = new System.Random();
 
-    static int NUM_PARTICLES = 1000; // Specify how many particles to show 
+    public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
     public string geometryFilePath = "3D_reconstruction_NEW.txt";
-    public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
     public Material voxelMaterial = null;
     public PhysicMaterial geometryPhysic = null;
 
     GeometryData geometryData = new GeometryData();
-    FluidVelocityData velocityData = new FluidVelocityData();
-
     GameObject geometryGameObject = null;
-    List<GameObject> particleGameObjects = new List<GameObject>(new GameObject[NUM_PARTICLES]);
-    int[] particleIDs = new int[NUM_PARTICLES];
 
-    List<Vector3> oldPositions = new List<Vector3>();
-    double[] velocityScalars = new double[NUM_PARTICLES];
-    List<Vector3> velocityVectors = new List<Vector3>();
 
     /*
      Create a cube for every occupied volume element ("voxel") in the data set.
@@ -251,21 +243,6 @@ public class NativeSimTest : MonoBehaviour
             Debug.LogWarning("Problem loading geometry data: " + e);
         }
 
-        // Try to load the velocity data
-        try
-        {
-            var errorMsg = velocityData.LoadFromFile(velocityFilePath);
-            if (errorMsg != null)
-            {
-                Debug.LogWarning("Problem loading fluid velocity data: " + errorMsg);
-                return;
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning("Problem loading fluid velocity data: " + e);
-        }
-
         // Generate cube data from the input file
         BuildCubesNew(geometryData, vertices, indices);
 
@@ -280,7 +257,7 @@ public class NativeSimTest : MonoBehaviour
 
         for (int i = 0; i < NUM_PARTICLES; ++i)
         {
-            
+            new ParticleObject(i, geometryPhysic, geometryData);
         }
     }
 
