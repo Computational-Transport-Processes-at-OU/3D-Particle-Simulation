@@ -5,16 +5,17 @@ using UnityEngine;
 
 public class NativeSimTest : MonoBehaviour
 {
-    System.Random rand = new System.Random();
+    internal static System.Random rand = new System.Random();
 
     public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
     public string geometryFilePath = "3D_reconstruction_NEW.txt";
+    public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
     public Material voxelMaterial = null;
     public PhysicMaterial geometryPhysic = null;
 
     GeometryData geometryData = new GeometryData();
     GameObject geometryGameObject = null;
-
+    internal static FluidVelocityData velocityData = new FluidVelocityData();
 
     /*
      Create a cube for every occupied volume element ("voxel") in the data set.
@@ -241,6 +242,21 @@ public class NativeSimTest : MonoBehaviour
         catch (System.Exception e)
         {
             Debug.LogWarning("Problem loading geometry data: " + e);
+        }
+
+        // Try to load the velocity data
+        try
+        {
+            var errorMsg = velocityData.LoadFromFile(velocityFilePath);
+            if (errorMsg != null)
+            {
+                Debug.LogWarning("Problem loading fluid velocity data: " + errorMsg);
+                return;
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Problem loading fluid velocity data: " + e);
         }
 
         // Generate cube data from the input file

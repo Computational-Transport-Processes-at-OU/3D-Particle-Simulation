@@ -1,33 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ParticleHandling : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Try to load the velocity data
-        try
-        {
-            var errorMsg = velocityData.LoadFromFile(velocityFilePath);
-            if (errorMsg != null)
-            {
-                Debug.LogWarning("Problem loading fluid velocity data: " + errorMsg);
-                return;
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning("Problem loading fluid velocity data: " + e);
-        }
-    }
+    public bool destroyOutOfBounds = false;
+    FluidVelocityData velocityData = NativeSimTest.velocityData;
 
     // Update is called once per frame
     void FixedUpdate()
     {
         // Make sure the particles don't go out of bounds
-        Rigidbody rBody = this.GetComponent<Rigidbody>();
+        Rigidbody rBody = this.gameObject.GetComponent<Rigidbody>();
         // X
         if (rBody.position.x < 0)
         {
@@ -106,24 +91,24 @@ public class ParticleHandling : MonoBehaviour
         // The colors will go red, yellow, green, blue, red being the slowest.
 
         // Bottom threshold: red
-        if (rBody.velocity.sqrMagnitude <= 5f)
+        if (rBody.velocity.sqrMagnitude <= 75f)
         {
-            this.GetComponent<Renderer>().material.color = Color.red;
+            this.gameObject.GetComponent<Renderer>().material.color = Color.red;
         }
         // Second threshold: yellow
-        if (rBody.velocity.sqrMagnitude > 5f && rBody.velocity.sqrMagnitude <= 10f)
+        if (rBody.velocity.sqrMagnitude > 75f && rBody.velocity.sqrMagnitude <= 115f)
         {
-            this.GetComponent<Renderer>().material.color = Color.yellow;
+            this.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
         }
         // Third threshold: green
-        if (rBody.velocity.sqrMagnitude > 10f && rBody.velocity.sqrMagnitude <= 15f)
+        if (rBody.velocity.sqrMagnitude > 115f && rBody.velocity.sqrMagnitude <= 150f)
         {
-            this.GetComponent<Renderer>().material.color = Color.green;
+            this.gameObject.GetComponent<Renderer>().material.color = Color.green;
         }
-        // Third threshold: green
-        if (rBody.velocity.sqrMagnitude > 15f && rBody.velocity.sqrMagnitude <= 20f)
+        // Last threshold: blue
+        if (rBody.velocity.sqrMagnitude > 150f)
         {
-            this.GetComponent<Renderer>().material.color = Color.blue;
+            this.gameObject.GetComponent<Renderer>().material.color = Color.blue;
         }
     }
 

@@ -5,12 +5,7 @@ using UnityEngine;
 
 public class ParticleObject
 {
-    System.Random rand = new System.Random();
-
-    public bool destroyOutOfBounds = false;
-    static int NUM_PARTICLES = NativeSimTest.NUM_PARTICLES;
-    public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
-    FluidVelocityData velocityData = new FluidVelocityData();
+    System.Random rand = NativeSimTest.rand;
 
     /*
      * This function will randomly generate a Vector3 position on the x = -30 plane, 
@@ -49,12 +44,12 @@ public class ParticleObject
         GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
         particle.tag = "Particle";
-        particle.transform.SetParent(gameObject.transform);
         particle.GetComponent<SphereCollider>().sharedMaterial = geometryPhysic;
         Rigidbody rbody = particle.AddComponent<Rigidbody>();
         rbody.position = GetRandomPosition(geometryData);
         rbody.useGravity = false;
         // Random x velocity between 1.0 and 5.0
         rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
+        particle.AddComponent<ParticleHandling>();
     }
 }
