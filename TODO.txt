@@ -3,6 +3,7 @@ TASKS TODO:
 [ ] Improve velocity interpolation
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
 [ ] Implement rate of aggregation; probability for particles to stick together
+[ ] Write README
 [ ] Find way to smooth surface of geometry
 [*] Fix exceptions caused by Particles going out of bounds
 [*] Create separate class for Particle objects; this will give better control over position, collision, destruction, etc
