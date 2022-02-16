@@ -17,6 +17,12 @@ public class NativeSimTest : MonoBehaviour
     GameObject geometryGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
 
+    // These four variables store the particle speed quartile thresholds
+    internal static float topThreshold = 0;
+    internal static float midThreshold = 0;
+    internal static float bottomThreshold = 0;
+
+
     /*
      Create a cube for every occupied volume element ("voxel") in the data set.
      This is the improved version, with two major assumptions:
@@ -258,6 +264,13 @@ public class NativeSimTest : MonoBehaviour
         {
             Debug.LogWarning("Problem loading fluid velocity data: " + e);
         }
+
+        // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
+        List<float> velocityScalars = velocityData.magnitudes;
+        velocityScalars.Sort();
+        bottomThreshold = velocityScalars[velocityScalars.Count / 4];
+        midThreshold = velocityScalars[velocityScalars.Count / 2];
+        topThreshold = velocityScalars[velocityScalars.Count / 2 + velocityScalars.Count / 4];
 
         // Generate cube data from the input file
         BuildCubesNew(geometryData, vertices, indices);

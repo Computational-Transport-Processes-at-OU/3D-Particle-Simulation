@@ -8,6 +8,10 @@ public class ParticleHandler : MonoBehaviour
     static bool destroyOutOfBounds = true;
     private bool destroyed = false;
     FluidVelocityData velocityData = NativeSimTest.velocityData;
+    // These four variables store the particle speed quartile thresholds
+    float topThreshold = Mathf.Pow(NativeSimTest.topThreshold, 2);
+    float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
+    float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
 
     // Update is called once per frame
     void FixedUpdate()
@@ -101,22 +105,22 @@ public class ParticleHandler : MonoBehaviour
             // The colors will go red, yellow, green, blue, red being the slowest.
 
             // Bottom threshold: red
-            if (rBody.velocity.sqrMagnitude <= 75f)
+            if (rBody.velocity.sqrMagnitude < bottomThreshold)
             {
                 this.gameObject.GetComponent<Renderer>().material.color = Color.red;
             }
             // Second threshold: yellow
-            if (rBody.velocity.sqrMagnitude > 75f && rBody.velocity.sqrMagnitude <= 115f)
+            if (rBody.velocity.sqrMagnitude >= bottomThreshold && rBody.velocity.sqrMagnitude < midThreshold)
             {
                 this.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
             }
             // Third threshold: green
-            if (rBody.velocity.sqrMagnitude > 115f && rBody.velocity.sqrMagnitude <= 150f)
+            if (rBody.velocity.sqrMagnitude >= midThreshold && rBody.velocity.sqrMagnitude < topThreshold)
             {
                 this.gameObject.GetComponent<Renderer>().material.color = Color.green;
             }
             // Last threshold: blue
-            if (rBody.velocity.sqrMagnitude > 150f)
+            if (rBody.velocity.sqrMagnitude >= topThreshold)
             {
                 this.gameObject.GetComponent<Renderer>().material.color = Color.blue;
             }
@@ -128,14 +132,15 @@ public class ParticleHandler : MonoBehaviour
     {
         if (collision.gameObject.tag == "Particle")
         {
+            // Uncomment to completely ignore Particle collision
             //Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-            // creates joint
+       
             FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-            // sets joint position to point of contact
+            // Sets joint position to point of contact
             joint.anchor = collision.contacts[0].point;
-            // conects the joint to the other object
+            // Conects the joint to the other Particle
             joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
-            // Stops objects from continuing to collide and creating more joints
+            // Stops Particles from continuing to collide and creating more joints
             joint.enableCollision = false;
         }
     }

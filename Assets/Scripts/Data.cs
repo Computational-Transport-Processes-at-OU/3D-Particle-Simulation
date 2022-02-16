@@ -214,6 +214,8 @@ public class FluidVelocityData
     // Values from file; stored as single flat (i.e. 1-D) array of lists for simplicity.
     public List<Vector3> velocity = new List<Vector3>();
 
+    public List<float> magnitudes = new List<float>();
+
     // Convert an x,y,z lattice coordinate into an index into the flat lists
     public int GetIndex(int x, int y, int z)
     {
@@ -269,6 +271,7 @@ public class FluidVelocityData
                 // Add velocity values to lists using the lattice coordinates
                 var index = GetIndex(x, y, z);
                 velocity[index] = new Vector3(x_velocity, y_velocity, z_velocity);
+                magnitudes.Add(magnitude / 0.001f);
             }
             catch (System.Exception e)
             {
