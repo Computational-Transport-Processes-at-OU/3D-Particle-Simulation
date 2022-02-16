@@ -50,6 +50,6 @@ public class ParticleObject
         rbody.useGravity = false;
         // Random x velocity between 1.0 and 5.0
         rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
-        particle.AddComponent<ParticleHandling>();
+        particle.AddComponent<ParticleHandler>();
     }
 }
