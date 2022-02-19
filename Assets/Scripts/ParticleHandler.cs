@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ParticleHandler : MonoBehaviour
 {
+    System.Random rand = NativeSimTest.rand;
+
     static bool destroyOutOfBounds = true;
     private bool destroyed = false;
     FluidVelocityData velocityData = NativeSimTest.velocityData;
@@ -12,6 +14,7 @@ public class ParticleHandler : MonoBehaviour
     float topThreshold = Mathf.Pow(NativeSimTest.topThreshold, 2);
     float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
     float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
+    internal double aggregationRate;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -130,18 +133,22 @@ public class ParticleHandler : MonoBehaviour
     // Override to handle what happens immediately after collisions
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Particle")
+        // Uncomment to completely ignore Particle collision
+        //Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+
+        // Particles will stick together based on their aggregation rate, used as a probability of joining.
+        if (rand.NextDouble() < aggregationRate)
         {
-            // Uncomment to completely ignore Particle collision
-            //Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-       
-            FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-            // Sets joint position to point of contact
-            joint.anchor = collision.contacts[0].point;
-            // Conects the joint to the other Particle
-            joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
-            // Stops Particles from continuing to collide and creating more joints
-            joint.enableCollision = false;
+            if (collision.gameObject.tag == "Particle")
+            {
+                FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                // Sets joint position to point of contact
+                joint.anchor = collision.contacts[0].point;
+                // Conects the joint to the other Particle
+                joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
+                // Stops Particles from continuing to collide and creating more joints
+                joint.enableCollision = false;
+            }
         }
     }
 }

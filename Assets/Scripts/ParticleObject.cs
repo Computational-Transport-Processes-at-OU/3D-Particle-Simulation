@@ -6,6 +6,8 @@ using UnityEngine;
 public class ParticleObject
 {
     System.Random rand = NativeSimTest.rand;
+    GameObject particle;
+    double aggregationRate;
 
     /*
      * This function will randomly generate a Vector3 position on the x = -30 plane, 
@@ -39,9 +41,10 @@ public class ParticleObject
     }
 
     // Constructor. Creates a new Sphere GameObject
-    public ParticleObject(int index, PhysicMaterial geometryPhysic, GeometryData geometryData)
+    public ParticleObject(int index, double aggregationRate, PhysicMaterial geometryPhysic, GeometryData geometryData)
     {
-        GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        this.aggregationRate = aggregationRate;
+        particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
         particle.tag = "Particle";
         particle.GetComponent<SphereCollider>().sharedMaterial = geometryPhysic;
@@ -50,6 +53,7 @@ public class ParticleObject
         rbody.useGravity = false;
         // Random x velocity between 1.0 and 5.0
         rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
-        particle.AddComponent<ParticleHandler>();
+        ParticleHandler handler = particle.AddComponent<ParticleHandler>();
+        handler.aggregationRate = aggregationRate;
     }
 }

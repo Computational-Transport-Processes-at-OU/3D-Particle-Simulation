@@ -17,7 +17,8 @@ public class NativeSimTest : MonoBehaviour
     GameObject geometryGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
 
-    // These four variables store the particle speed quartile thresholds
+    public double aggregationRate = 0.5;
+    // These three variables store the particle speed quartile thresholds
     internal static float topThreshold = 0;
     internal static float midThreshold = 0;
     internal static float bottomThreshold = 0;
@@ -286,7 +287,7 @@ public class NativeSimTest : MonoBehaviour
 
         for (int i = 0; i < NUM_PARTICLES; ++i)
         {
-            new ParticleObject(i, geometryPhysic, geometryData);
+            new ParticleObject(i, aggregationRate, geometryPhysic, geometryData);
         }
     }
 

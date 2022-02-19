@@ -1,7 +1,7 @@
 TASKS TODO:
 
-[ ] Implement rate of aggregation; probability for particles to stick together
 [ ] Loop program when all particles destroyed
+[ ] Get data on all particles' aggregations, speeds, etc.
 [ ] Color open space based on -x velocity by spawning a translucent red no-clip cube
 [ ] Improve velocity interpolation
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
@@ -14,3 +14,4 @@ TASKS TODO:
 [*] In new Particle class, set up FixedUpdate functions
 [*] Figure out how to remove GameObject from its FixedJoint when it is destroyed
 [*] Make quartile velocity colors based on velocity thresholds in data file
+[*] Implement rate of aggregation; probability for particles to stick together
