@@ -8,6 +8,8 @@ public class NativeSimTest : MonoBehaviour
     internal static System.Random rand = new System.Random();
 
     public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
+    public double aggregationRate = 0.5;
+    public int numberOfRestarts = 4;
     public string geometryFilePath = "3D_reconstruction_NEW.txt";
     public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
     public Material voxelMaterial = null;
@@ -17,7 +19,6 @@ public class NativeSimTest : MonoBehaviour
     GameObject geometryGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
 
-    public double aggregationRate = 0.5;
     // These three variables store the particle speed quartile thresholds
     internal static float topThreshold = 0;
     internal static float midThreshold = 0;
@@ -240,15 +241,15 @@ public class NativeSimTest : MonoBehaviour
             var errorMsg = geometryData.LoadFromFile(geometryFilePath);
             if (errorMsg != null)
             {
-                Debug.LogWarning("Problem loading geometry data: " + errorMsg);
+                Debug.LogError("Problem loading geometry data: " + errorMsg);
                 return;
             }
             var str = $"System lattice dimensions: i={geometryData.iMax} j={geometryData.jMax} k={geometryData.kMax}";
-            Debug.LogWarning(str);
+            Debug.Log(str);
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning("Problem loading geometry data: " + e);
+            Debug.LogError("Problem loading geometry data: " + e);
         }
 
         // Try to load the velocity data
@@ -257,13 +258,13 @@ public class NativeSimTest : MonoBehaviour
             var errorMsg = velocityData.LoadFromFile(velocityFilePath);
             if (errorMsg != null)
             {
-                Debug.LogWarning("Problem loading fluid velocity data: " + errorMsg);
+                Debug.LogError("Problem loading fluid velocity data: " + errorMsg);
                 return;
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning("Problem loading fluid velocity data: " + e);
+            Debug.LogError("Problem loading fluid velocity data: " + e);
         }
 
         // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
@@ -291,14 +292,21 @@ public class NativeSimTest : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        
-    }
-    
     private void FixedUpdate()
     {
-        
+        // Restart the simulation if all Particles are destroyed
+        if (numberOfRestarts > 0)
+        {
+            if (GameObject.FindWithTag("Particle") == null)
+            {
+                Debug.Log("Respawning particles! " + numberOfRestarts + "respawns left!");
+                for (int i = 0; i < NUM_PARTICLES; ++i)
+                {
+                    new ParticleObject(i, aggregationRate, geometryPhysic, geometryData);
+                }
+                --numberOfRestarts;
+            }
+        }
     }
 }
 
