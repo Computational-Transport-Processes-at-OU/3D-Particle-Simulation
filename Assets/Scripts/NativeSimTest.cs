@@ -10,8 +10,8 @@ public class NativeSimTest : MonoBehaviour
     public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
     public double aggregationRate = 0.5;
     public int numberOfRestarts = 4;
-    public string geometryFilePath = "3D_reconstruction_NEW.txt";
-    public string velocityFilePath = "TECPLOT_CONVERGED_global_velocity_field.txt";
+    public string geometryFilePath = "";
+    public string velocityFilePath = "";
     public Material voxelMaterial = null;
     public PhysicMaterial geometryPhysic = null;
 

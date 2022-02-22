@@ -48,10 +48,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Big data files
-Particle_trajectories_SINGLE.txt
-Particle_trajectories_THOUSAND.txt
-3d_reconstruction_NEW.txt
-3D_reconstruction_OG.txt 
-Particle_trajectories_500_2Msteps.txt 
+Data/
 cubes.obj
-TECPLOT_CONVERGED_global_velocity_field.txt

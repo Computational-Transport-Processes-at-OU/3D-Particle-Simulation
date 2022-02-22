@@ -22,11 +22,11 @@ public class ParticleObject
         // Directions so the edge of the particle spheres don't hit the geometry
         while (true)
         {
-            if (data.GetIntensityAt(1, (int)y++, (int)z++) >= 7500f || data.GetIntensityAt(1, (int)y++, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y, (int)z++) >= 7500f || data.GetIntensityAt(1, (int)y, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y--, (int)z--) >= 7500f || data.GetIntensityAt(1, (int)y--, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y, (int)z--) >= 7500f || data.GetIntensityAt(1, (int)y++, (int)z--) >= 7500f ||
-                data.GetIntensityAt(1, (int)y--, (int)z++) >= 7500f)
+            if (data.GetIntensityAt(1, (int)y++, (int)z++) > 0 || data.GetIntensityAt(1, (int)y++, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z++) > 0 || data.GetIntensityAt(1, (int)y, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z--) > 0 || data.GetIntensityAt(1, (int)y--, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z--) > 0 || data.GetIntensityAt(1, (int)y++, (int)z--) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z++) > 0)
             {
                 // Regenerate the random numbers
                 y = (float)(rand.NextDouble() * (199 - 1) + 1);

@@ -1,5 +1,6 @@
 TASKS TODO:
 
+[ ] Variable aggregation rates per iteration
 [ ] Get data on all particles' aggregations, speeds, etc.
 [ ] Color open space based on -x velocity by spawning a translucent red no-clip cube
 [ ] Improve velocity interpolation
