@@ -8,8 +8,8 @@ public class NativeSimTest : MonoBehaviour
     internal static System.Random rand = new System.Random();
 
     public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
-    public double aggregationRate = 0.5;
-    public int numberOfRestarts = 4;
+    public int numberOfRestarts;
+    public double[] aggregationRates;
     public string geometryFilePath = "";
     public string velocityFilePath = "";
     public Material voxelMaterial = null;
@@ -232,6 +232,11 @@ public class NativeSimTest : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if (numberOfRestarts != aggregationRates.Length)
+        {
+            throw new ArgumentException("Number of Restarts must be the same as the number of Aggregation Rates!!");
+        }
+
         var vertices = new List<CubeGenerator.Coordinate>();
         var indices = new List<int>();
 
@@ -286,9 +291,10 @@ public class NativeSimTest : MonoBehaviour
         // This can take a few seconds, so disable it if you don't care.
         //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
 
+        Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < NUM_PARTICLES; ++i)
         {
-            new ParticleObject(i, aggregationRate, geometryPhysic, geometryData);
+            new ParticleObject(i, aggregationRates[0], geometryPhysic, geometryData);
         }
     }
 
@@ -299,10 +305,11 @@ public class NativeSimTest : MonoBehaviour
         {
             if (GameObject.FindWithTag("Particle") == null)
             {
-                Debug.Log("Respawning particles! " + numberOfRestarts + "respawns left!");
+                double rate = aggregationRates[aggregationRates.Length - numberOfRestarts];
+                Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
                 for (int i = 0; i < NUM_PARTICLES; ++i)
                 {
-                    new ParticleObject(i, aggregationRate, geometryPhysic, geometryData);
+                    new ParticleObject(i, rate, geometryPhysic, geometryData);
                 }
                 --numberOfRestarts;
             }
