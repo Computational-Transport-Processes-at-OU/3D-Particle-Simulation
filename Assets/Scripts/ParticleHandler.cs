@@ -16,10 +16,17 @@ public class ParticleHandler : MonoBehaviour
     float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
     internal double aggregationRate;
     internal float velocityScale;
+    internal long survivalTime;
 
-    // Update is called once per frame
+    // FixedUpdate is called every 0.02 seconds by default
     void FixedUpdate()
     {
+        // Increment survival time as long as a particle is not aggregated
+        if (this.gameObject.GetComponent<FixedJoint>() == null)
+        {
+            ++survivalTime;
+        }
+
         // Make sure the particles don't go out of bounds
         Rigidbody rBody = this.gameObject.GetComponent<Rigidbody>();
         // X
@@ -129,6 +136,10 @@ public class ParticleHandler : MonoBehaviour
                 this.gameObject.GetComponent<Renderer>().material.color = Color.blue;
             }
         }
+        else
+        {
+            Debug.Log(this.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
+        }
     }
 
     // Override to handle what happens immediately after collisions
@@ -149,6 +160,10 @@ public class ParticleHandler : MonoBehaviour
                 joint.connectedBody = collision.contacts[0].otherCollider.transform.GetComponentInParent<Rigidbody>();
                 // Stops Particles from continuing to collide and creating more joints
                 joint.enableCollision = false;
+
+                Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
+                Debug.Log(this.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
+                Debug.Log(collision.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
             }
         }
     }
