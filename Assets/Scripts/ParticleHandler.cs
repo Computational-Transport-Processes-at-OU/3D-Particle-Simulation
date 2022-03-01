@@ -15,6 +15,7 @@ public class ParticleHandler : MonoBehaviour
     float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
     float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
     internal double aggregationRate;
+    internal float velocityScale;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -101,7 +102,7 @@ public class ParticleHandler : MonoBehaviour
         if (!destroyed)
         {
             // Set the particle's velocity based on their position
-            rBody.velocity = velocityData.GetVelocityAt((int)Math.Floor(rBody.position.x), (int)Math.Floor(rBody.position.y), (int)Math.Floor(rBody.position.z));
+            rBody.velocity = velocityData.GetVelocityAt((int)Math.Floor(rBody.position.x), (int)Math.Floor(rBody.position.y), (int)Math.Floor(rBody.position.z)) / 0.005f;
 
             // Now we update the particle's color based on its speed.
             // This will be based on four speed thresholds

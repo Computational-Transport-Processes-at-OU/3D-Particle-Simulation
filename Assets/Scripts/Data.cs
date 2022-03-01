@@ -227,8 +227,7 @@ public class FluidVelocityData
     public Vector3 GetVelocityAt(int x, int y, int z)
     {
         var index = GetIndex(x, y, z);
-        //return new Vector3(velocity[index].x / 0.3117167144E-03f, velocity[index].y / 0.3117167144E-03f, velocity[index].z / 0.3117167144E-03f);
-        return new Vector3(velocity[index].x, velocity[index].y, velocity[index].z) / 0.001f;
+        return new Vector3(velocity[index].x, velocity[index].y, velocity[index].z);
     }
 
     // We expect lines in the format:
@@ -271,7 +270,7 @@ public class FluidVelocityData
                 // Add velocity values to lists using the lattice coordinates
                 var index = GetIndex(x, y, z);
                 velocity[index] = new Vector3(x_velocity, y_velocity, z_velocity);
-                magnitudes.Add(magnitude / 0.001f);
+                magnitudes.Add(magnitude);
             }
             catch (System.Exception e)
             {

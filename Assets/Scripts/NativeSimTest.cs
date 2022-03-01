@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,8 @@ public class NativeSimTest : MonoBehaviour
 {
     internal static System.Random rand = new System.Random();
 
-    public static int NUM_PARTICLES = 1000; // Specify how many particles to show 
+    public int numberOfParticles = 2000; // Specify how many particles to show 
+    public float velocityScale;
     public int numberOfRestarts;
     public double[] aggregationRates;
     public string geometryFilePath = "";
@@ -273,7 +275,9 @@ public class NativeSimTest : MonoBehaviour
         }
 
         // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
-        List<float> velocityScalars = velocityData.magnitudes;
+        List<float> velocityScalars = velocityData.magnitudes.Select(m => m / velocityScale).ToList();
+        // Ignore zero magnitudes
+        velocityScalars.RemoveAll(m => m == 0);
         velocityScalars.Sort();
         bottomThreshold = velocityScalars[velocityScalars.Count / 4];
         midThreshold = velocityScalars[velocityScalars.Count / 2];
@@ -292,9 +296,9 @@ public class NativeSimTest : MonoBehaviour
         //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
 
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
-        for (int i = 0; i < NUM_PARTICLES; ++i)
+        for (int i = 0; i < numberOfParticles; ++i)
         {
-            new ParticleObject(i, aggregationRates[0], geometryPhysic, geometryData);
+            new ParticleObject(i, aggregationRates[0], velocityScale, geometryPhysic, geometryData);
         }
     }
 
@@ -305,13 +309,13 @@ public class NativeSimTest : MonoBehaviour
         {
             if (GameObject.FindWithTag("Particle") == null)
             {
+                --numberOfRestarts;
                 double rate = aggregationRates[aggregationRates.Length - numberOfRestarts];
                 Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
-                for (int i = 0; i < NUM_PARTICLES; ++i)
+                for (int i = 0; i < numberOfParticles; ++i)
                 {
-                    new ParticleObject(i, rate, geometryPhysic, geometryData);
+                    new ParticleObject(i, rate, velocityScale, geometryPhysic, geometryData);
                 }
-                --numberOfRestarts;
             }
         }
     }

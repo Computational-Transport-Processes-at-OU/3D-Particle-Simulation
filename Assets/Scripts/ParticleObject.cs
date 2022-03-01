@@ -8,6 +8,7 @@ public class ParticleObject
     System.Random rand = NativeSimTest.rand;
     GameObject particle;
     double aggregationRate;
+    float velocityScale;
 
     /*
      * This function will randomly generate a Vector3 position on the x = -30 plane, 
@@ -41,9 +42,8 @@ public class ParticleObject
     }
 
     // Constructor. Creates a new Sphere GameObject
-    public ParticleObject(int index, double aggregationRate, PhysicMaterial geometryPhysic, GeometryData geometryData)
+    public ParticleObject(int index, double aggregationRate, float velocityScale, PhysicMaterial geometryPhysic, GeometryData geometryData)
     {
-        this.aggregationRate = aggregationRate;
         particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
         particle.tag = "Particle";
@@ -53,7 +53,12 @@ public class ParticleObject
         rbody.useGravity = false;
         // Random x velocity between 1.0 and 5.0
         rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
+
+        this.aggregationRate = aggregationRate;
+        this.velocityScale = velocityScale;
+
         ParticleHandler handler = particle.AddComponent<ParticleHandler>();
         handler.aggregationRate = aggregationRate;
+        handler.velocityScale = velocityScale;
     }
 }

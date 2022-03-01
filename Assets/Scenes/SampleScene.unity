@@ -153,14 +153,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f7de65d6e22084d9c858f4ab1fc36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfParticles: 2000
+  velocityScale: 0.005
   numberOfRestarts: 4
   aggregationRates:
   - 0.5
   - 0.4
   - 0.3
   - 0.2
-  geometryFilePath: Data/OU_3d_reconstruction_NEW.txt
-  velocityFilePath: Data/OU_global_velocity_field.txt
+  geometryFilePath: Data/Benthiemr_3d_reconstruction_200.txt
+  velocityFilePath: Data/Benthiemer_Velocity_field.txt
   voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}
   geometryPhysic: {fileID: 13400000, guid: 40f7fe1393a185948851980b23dda12a, type: 2}
 --- !u!224 &89185242
