@@ -17,12 +17,19 @@ public class ParticleHandler : MonoBehaviour
     internal double aggregationRate;
     internal float velocityScale;
     internal long survivalTime;
+    internal bool aggregated = false;
+
+    // Helper function to write aggregation times to a file
+    void writeToFile(string particle1, string particle2, float p1SurvivalTime, float p2SurvivalTime)
+    {
+
+    }
 
     // FixedUpdate is called every 0.02 seconds by default
     void FixedUpdate()
     {
         // Increment survival time as long as a particle is not aggregated
-        if (this.gameObject.GetComponent<FixedJoint>() == null)
+        if (aggregated == false)
         {
             ++survivalTime;
         }
@@ -138,7 +145,7 @@ public class ParticleHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log(this.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
+            //Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
         }
     }
 
@@ -162,8 +169,18 @@ public class ParticleHandler : MonoBehaviour
                 joint.enableCollision = false;
 
                 Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
-                Debug.Log(this.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
-                Debug.Log(collision.gameObject.name + " survival time was: " + survivalTime * 0.02 + " seconds.");
+                if (this.aggregated == false)
+                {
+                    Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
+                    writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime);
+                }
+                if (collision.gameObject.GetComponent<ParticleHandler>().aggregated == false)
+                {
+                    Debug.Log(collision.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
+                }
+                
+                this.aggregated = true;
+                collision.gameObject.GetComponent<ParticleHandler>().aggregated = true;
             }
         }
     }

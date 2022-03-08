@@ -1,13 +1,13 @@
 TASKS TODO:
 
-[ ] Get data on all particles' aggregations, speeds, etc.
+[ ] Get data on all particles' aggregation, speed, location, collision time.
 [ ] Write analytics data to a file
-[ ] Color open space based on -x velocity by spawning a translucent red no-clip cube
 [ ] Improve velocity interpolation
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
 [ ] Write README
 [ ] Find way to smooth surface of geometry
 
+TASKS DONE:
 [*] Fix exceptions caused by Particles going out of bounds
 [*] Create separate class for Particle objects; this will give better control over position, collision, destruction, etc
 [*] In new Particle class, set up OnCollision functions
@@ -18,3 +18,4 @@ TASKS TODO:
 [*] Loop program when all particles destroyed
 [*] Variable aggregation rates per iteration
 [*] Implement survival time: track how long a particle goes before it aggregates
+[*] Color open space based on -x velocity by spawning a translucent red no-clip cube

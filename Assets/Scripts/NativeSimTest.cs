@@ -16,9 +16,11 @@ public class NativeSimTest : MonoBehaviour
     public string velocityFilePath = "";
     public Material voxelMaterial = null;
     public PhysicMaterial geometryPhysic = null;
+    public Material spaceMaterial = null;
 
     GeometryData geometryData = new GeometryData();
     GameObject geometryGameObject = null;
+    GameObject spaceGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
 
     // These three variables store the particle speed quartile thresholds
@@ -43,7 +45,7 @@ public class NativeSimTest : MonoBehaviour
         as we can throw away all the cube faces that are present where a solid
         cube is next to another solid cube! 
     */
-    void BuildCubesNew(GeometryData data, List<CubeGenerator.Coordinate> vertices, List<int> indices)
+    void BuildCubesNew(GeometryData data, FluidVelocityData vdata, List<CubeGenerator.Coordinate> vertices, List<int> indices, bool colorOpenSpace)
     {
         vertices.Clear();
         indices.Clear();
@@ -59,7 +61,13 @@ public class NativeSimTest : MonoBehaviour
                 {
                     var val = data.GetIntensityAt(i, j, k);
 
-                    if (val < cutoff) continue; // cube not occupied, ignore. 
+                    if (val < cutoff && !colorOpenSpace) continue; // cube not occupied, ignore. 
+
+                    // we want to color the open space, so ignore occupied cube or cube with positive x velocity.
+                    if (colorOpenSpace)
+                    {
+                        if (val >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f) continue;
+                    }
 
                     // Location on the regular lattice of the current cube.
                     var location = new CubeGenerator.Coordinate { x = i, y = j, z = k };
@@ -75,8 +83,18 @@ public class NativeSimTest : MonoBehaviour
                     {
                         bool prev_empty = true, next_empty = true;
 
-                        if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) < cutoff);
-                        if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) < cutoff);
+                        // EXPLAIN
+                        if (colorOpenSpace)
+                        {
+                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                        }
+
+                        else
+                        {
+                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) < cutoff);
+                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) < cutoff);
+                        }
 
                         if (prev_empty) CubeGenerator.GenerateFace(0, 0, location, vertices, indices);
                         if (next_empty) CubeGenerator.GenerateFace(0, 1, location, vertices, indices);
@@ -86,8 +104,18 @@ public class NativeSimTest : MonoBehaviour
                     {
                         bool prev_empty = true, next_empty = true;
 
-                        if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) < cutoff);
-                        if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) < cutoff);
+                        // EXPLAIN
+                        if (colorOpenSpace)
+                        {
+                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                        }
+
+                        else
+                        {
+                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) < cutoff);
+                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) < cutoff);
+                        }
 
                         if (prev_empty) CubeGenerator.GenerateFace(1, 0, location, vertices, indices);
                         if (next_empty) CubeGenerator.GenerateFace(1, 1, location, vertices, indices);
@@ -97,8 +125,18 @@ public class NativeSimTest : MonoBehaviour
                     {
                         bool prev_empty = true, next_empty = true;
 
-                        if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) < cutoff);
-                        if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) < cutoff);
+                        // TODO: EXPLAIN
+                        if (colorOpenSpace)
+                        {
+                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                        }
+
+                        else
+                        {
+                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) < cutoff);
+                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) < cutoff);
+                        }
 
                         if (prev_empty) CubeGenerator.GenerateFace(2, 0, location, vertices, indices);
                         if (next_empty) CubeGenerator.GenerateFace(2, 1, location, vertices, indices);
@@ -117,7 +155,7 @@ public class NativeSimTest : MonoBehaviour
      Note: the ~65,000 vertex limit can be avoided in newer Unity versions, but let's try to keep
      this as compatible as possible with earlier Unity versions.
     */
-    void AddMeshToObject(GameObject parent, List<CubeGenerator.Coordinate> vertices, List<int> indices)
+    void AddMeshToObject(GameObject parent, List<CubeGenerator.Coordinate> vertices, List<int> indices, bool colorOpenSpace)
     {
         var maxVtx = 65000; // Unity only allows less than ~65,000 vertices per mesh!
 
@@ -135,7 +173,7 @@ public class NativeSimTest : MonoBehaviour
             if (vtx.Count > maxVtx)
             {
                 // Add current mesh data to parent object ...
-                add(parent, vtx, idx);
+                add(parent, vtx, idx, colorOpenSpace);
 
                 // ... then clear existing data to start a new mesh.
                 vtx.Clear();
@@ -192,23 +230,29 @@ public class NativeSimTest : MonoBehaviour
         }
 
         // If we have any partial mesh data left over, add it now.
-        if (idx.Count > 0) add(parent, vtx, idx);
+        if (idx.Count > 0) add(parent, vtx, idx, colorOpenSpace);
     }
 
     // This internal function creates a new child GameObject of the specified parent GameObject,
     // and then attaches mesh data generated from the specified vertex/index lists.
-    void add(GameObject parent, List<CubeGenerator.Coordinate> vertices, List<int> indices)
+    void add(GameObject parent, List<CubeGenerator.Coordinate> vertices, List<int> indices, bool colorOpenSpace)
     {
         var go = new GameObject("Mesh");
-        go.tag = "Geometry";
-        go.AddComponent<MeshFilter>();
-        go.AddComponent<MeshRenderer>().material = voxelMaterial;
-        MeshCollider mc = go.AddComponent<MeshCollider>();
-        mc.sharedMaterial = geometryPhysic;
-        /*Rigidbody rbody = go.AddComponent<Rigidbody>();
-        rbody.useGravity = false;
-        rbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationZ;
-        rbody.isKinematic = true;*/
+
+        if (colorOpenSpace)
+        {
+            go.tag = "Space";
+            go.AddComponent<MeshFilter>();
+            go.AddComponent<MeshRenderer>().material = spaceMaterial;
+        }
+        else
+        {
+            go.tag = "Geometry";
+            go.AddComponent<MeshFilter>();
+            go.AddComponent<MeshRenderer>().material = voxelMaterial;
+            MeshCollider mc = go.AddComponent<MeshCollider>();
+            mc.sharedMaterial = geometryPhysic;
+        }
 
         go.transform.SetParent(parent.transform);
 
@@ -228,7 +272,8 @@ public class NativeSimTest : MonoBehaviour
         mesh.RecalculateNormals();
 
         go.GetComponent<MeshFilter>().mesh = mesh;
-        go.GetComponent<MeshCollider>().sharedMesh = mesh;
+        if (!colorOpenSpace) 
+            go.GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     // Use this for initialization
@@ -274,6 +319,28 @@ public class NativeSimTest : MonoBehaviour
             Debug.LogError("Problem loading fluid velocity data: " + e);
         }
 
+        // Generate cube data from the input file
+        BuildCubesNew(geometryData, velocityData, vertices, indices, false);
+
+        // Add the mesh data as child GameObjects of a "Geometry" GameObject.
+        geometryGameObject = new GameObject("Geometry");
+        geometryGameObject.transform.SetParent(gameObject.transform);
+        AddMeshToObject(geometryGameObject, vertices, indices, false);
+
+        // Save the mesh data we calculated for inspection in e.g. MeshLab.
+        // This can take a few seconds, so disable it if you don't care.
+        //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
+
+        // Generate cube data for any coordinates where the x velocity is negative
+        vertices = new List<CubeGenerator.Coordinate>();
+        indices = new List<int>();
+        BuildCubesNew(geometryData, velocityData, vertices, indices, true);
+        // Add the mesh data as child GameObjects of a "Geometry" GameObject.
+        spaceGameObject = new GameObject("Space");
+        spaceGameObject.transform.SetParent(gameObject.transform);
+        AddMeshToObject(spaceGameObject, vertices, indices, true);
+
+
         // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
         List<float> velocityScalars = velocityData.magnitudes.Select(m => m / velocityScale).ToList();
         // Ignore zero magnitudes
@@ -282,18 +349,6 @@ public class NativeSimTest : MonoBehaviour
         bottomThreshold = velocityScalars[velocityScalars.Count / 4];
         midThreshold = velocityScalars[velocityScalars.Count / 2];
         topThreshold = velocityScalars[velocityScalars.Count / 2 + velocityScalars.Count / 4];
-
-        // Generate cube data from the input file
-        BuildCubesNew(geometryData, vertices, indices);
-
-        // Add the mesh data as child GameObjects of a "Geometry" GameObject.
-        geometryGameObject = new GameObject("Geometry");
-        geometryGameObject.transform.SetParent(gameObject.transform);
-        AddMeshToObject(geometryGameObject, vertices, indices);
-
-        // Save the mesh data we calculated for inspection in e.g. MeshLab.
-        // This can take a few seconds, so disable it if you don't care.
-        //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
 
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < numberOfParticles; ++i)
