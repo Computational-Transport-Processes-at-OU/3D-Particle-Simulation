@@ -19,7 +19,8 @@ public class ParticleHandler : MonoBehaviour
     internal long survivalTime;
     internal bool aggregated = false;
 
-    // Helper function to write aggregation times to a file
+    // Helper function to write aggregation times to a csv file
+    // TODO: INCLUDE DISTANCE
     void writeToFile(string particle1, string particle2, float p1SurvivalTime, float p2SurvivalTime)
     {
 
