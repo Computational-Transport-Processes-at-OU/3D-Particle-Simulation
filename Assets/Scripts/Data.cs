@@ -70,8 +70,8 @@ public class GeometryData
             try
             {
                 var iTok = tokens[2];
-                var jTok = tokens[4];
-                var kTok = tokens[6];
+                var jTok = tokens[6];
+                var kTok = tokens[4];
 
                 iMax = int.Parse(iTok);
                 jMax = int.Parse(jTok);
@@ -108,8 +108,8 @@ public class GeometryData
             {
                 // Convert from unit-based indices in the file to zero-based indices
                 var i = int.Parse(tokens[0])-1;
-                var j = int.Parse(tokens[1])-1;
-                var k = int.Parse(tokens[2])-1;
+                var j = int.Parse(tokens[2])-1;
+                var k = int.Parse(tokens[1])-1;
 
                 // Sanity check of lattice coordinates vs what we expect
                 if( (i<0) || (i>=iMax) )
@@ -174,8 +174,8 @@ public class TrajectoryData
             {
                 var id = int.Parse(tokens[0]);
                 var x  = float.Parse(tokens[1]);
-                var y  = float.Parse(tokens[2]);
-                var z  = float.Parse(tokens[3]);
+                var y  = float.Parse(tokens[3]);
+                var z  = float.Parse(tokens[2]);
 
                 if (!idToTrajectory.ContainsKey(id))
                 {
@@ -258,13 +258,13 @@ public class FluidVelocityData
             {
                 // Position values
                 var x = int.Parse(tokens[0]) - 1;
-                var y = int.Parse(tokens[1]) - 1;
-                var z = int.Parse(tokens[2]) - 1;
+                var y = int.Parse(tokens[2]) - 1;
+                var z = int.Parse(tokens[1]) - 1;
 
                 // Velocity + magnitude values
                 float x_velocity = (float)Double.Parse(tokens[3], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
-                float y_velocity = (float)Double.Parse(tokens[4], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
-                float z_velocity = (float)Double.Parse(tokens[5], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
+                float y_velocity = (float)Double.Parse(tokens[5], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
+                float z_velocity = (float)Double.Parse(tokens[4], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
                 float magnitude = (float)Double.Parse(tokens[6], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
 
                 // Add velocity values to lists using the lattice coordinates

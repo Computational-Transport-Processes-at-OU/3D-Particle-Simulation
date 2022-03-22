@@ -1,6 +1,5 @@
 TASKS TODO:
 
-[ ] Check if X,Y,Z are ordered correctly
 [ ] Store initial position, calculate survival distance
 [ ] Write analytics data to a file
 [ ] Find out why red is only coloring one face of cube
@@ -21,3 +20,4 @@ TASKS DONE:
 [*] Variable aggregation rates per iteration
 [*] Implement survival time: track how long a particle goes before it aggregates
 [*] Color open space based on -x velocity by spawning a translucent red no-clip cube
+[*] Check if X,Y,Z are ordered correctly
