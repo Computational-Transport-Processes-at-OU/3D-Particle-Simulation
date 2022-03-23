@@ -7,6 +7,7 @@ public class ParticleObject
 {
     System.Random rand = NativeSimTest.rand;
     GameObject particle;
+    Vector3 initialPos;
     double aggregationRate;
     float velocityScale;
 
@@ -38,7 +39,8 @@ public class ParticleObject
                 break;
             }
         }
-        return new Vector3(1, y, z);
+        initialPos = new Vector3(1, y, z);
+        return initialPos;
     }
 
     // Constructor. Creates a new Sphere GameObject
@@ -58,6 +60,7 @@ public class ParticleObject
         this.velocityScale = velocityScale;
 
         ParticleHandler handler = particle.AddComponent<ParticleHandler>();
+        handler.initialPos = initialPos;
         handler.aggregationRate = aggregationRate;
         handler.velocityScale = velocityScale;
     }

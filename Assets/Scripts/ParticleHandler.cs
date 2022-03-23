@@ -14,6 +14,7 @@ public class ParticleHandler : MonoBehaviour
     float topThreshold = Mathf.Pow(NativeSimTest.topThreshold, 2);
     float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
     float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
+    internal Vector3 initialPos;
     internal double aggregationRate;
     internal float velocityScale;
     internal long survivalTime;
@@ -177,7 +178,8 @@ public class ParticleHandler : MonoBehaviour
                 }
                 if (collision.gameObject.GetComponent<ParticleHandler>().aggregated == false)
                 {
-                    Debug.Log(collision.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
+                    float dist = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
+                    Debug.Log(collision.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
                 }
                 
                 this.aggregated = true;
