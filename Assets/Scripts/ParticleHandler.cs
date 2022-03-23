@@ -173,13 +173,14 @@ public class ParticleHandler : MonoBehaviour
                 Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
                 if (this.aggregated == false)
                 {
-                    Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
+                    float dist = Vector3.Distance(initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
+                    Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
                     writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime);
                 }
                 if (collision.gameObject.GetComponent<ParticleHandler>().aggregated == false)
                 {
                     float dist = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
-                    Debug.Log(collision.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
+                    Debug.Log(collision.gameObject.name + " survival time was: " + (collision.gameObject.GetComponent<ParticleHandler>().survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
                 }
                 
                 this.aggregated = true;
