@@ -50,3 +50,4 @@ crashlytics-build.properties
 # Big data files
 Data/
 cubes.obj
+*.csv

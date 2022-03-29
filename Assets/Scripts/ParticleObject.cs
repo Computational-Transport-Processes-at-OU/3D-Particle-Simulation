@@ -44,7 +44,7 @@ public class ParticleObject
     }
 
     // Constructor. Creates a new Sphere GameObject
-    public ParticleObject(int index, double aggregationRate, float velocityScale, PhysicMaterial geometryPhysic, GeometryData geometryData)
+    public ParticleObject(int index, double aggregationRate, float velocityScale, PhysicMaterial geometryPhysic, GeometryData geometryData, String startTime)
     {
         particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
@@ -63,5 +63,6 @@ public class ParticleObject
         handler.initialPos = initialPos;
         handler.aggregationRate = aggregationRate;
         handler.velocityScale = velocityScale;
+        handler.startTime = startTime;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -350,10 +351,12 @@ public class NativeSimTest : MonoBehaviour
         midThreshold = velocityScalars[velocityScalars.Count / 2];
         topThreshold = velocityScalars[velocityScalars.Count / 2 + velocityScalars.Count / 4];
 
+        String startTime = DateTime.Now.ToString("t", CultureInfo.GetCultureInfo("es-ES")).Replace(":","");
+        //System.IO.File.Create("aggregations_" + startTime + ".csv");
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < numberOfParticles; ++i)
         {
-            new ParticleObject(i, aggregationRates[0], velocityScale, geometryPhysic, geometryData);
+            new ParticleObject(i, aggregationRates[0], velocityScale, geometryPhysic, geometryData, startTime);
         }
     }
 
@@ -366,10 +369,12 @@ public class NativeSimTest : MonoBehaviour
             {
                 --numberOfRestarts;
                 double rate = aggregationRates[aggregationRates.Length - numberOfRestarts];
+                String startTime = DateTime.Now.ToString("t", CultureInfo.GetCultureInfo("es-ES")).Replace(":", "");
+                //System.IO.File.Create("aggregations_" + startTime + ".csv");
                 Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
                 for (int i = 0; i < numberOfParticles; ++i)
                 {
-                    new ParticleObject(i, rate, velocityScale, geometryPhysic, geometryData);
+                    new ParticleObject(i, rate, velocityScale, geometryPhysic, geometryData, startTime);
                 }
             }
         }

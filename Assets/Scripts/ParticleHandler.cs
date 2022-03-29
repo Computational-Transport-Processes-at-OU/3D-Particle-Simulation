@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,12 +20,17 @@ public class ParticleHandler : MonoBehaviour
     internal float velocityScale;
     internal long survivalTime;
     internal bool aggregated = false;
+    internal String startTime;
 
     // Helper function to write aggregation times to a csv file
-    // TODO: INCLUDE DISTANCE
-    void writeToFile(string particle1, string particle2, float p1SurvivalTime, float p2SurvivalTime)
+    void writeToFile(string particle1, string particle2, float p1SurvivalTime, float p2SurvivalTime, float p1SurvivalDist, float p2SurvivalDist)
     {
-
+        String filename = "aggregations_" + startTime + ".csv";
+        String text = particle1 + "," + (p1SurvivalTime * 0.02) + "," + p1SurvivalDist + "," + particle2 + "," + (p2SurvivalTime * 0.02) + "," + p2SurvivalDist;
+        using (StreamWriter w = File.AppendText(filename))
+        {
+            w.WriteLine(text);
+        }
     }
 
     // FixedUpdate is called every 0.02 seconds by default
@@ -145,10 +151,6 @@ public class ParticleHandler : MonoBehaviour
                 this.gameObject.GetComponent<Renderer>().material.color = Color.blue;
             }
         }
-        else
-        {
-            //Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds.");
-        }
     }
 
     // Override to handle what happens immediately after collisions
@@ -170,17 +172,18 @@ public class ParticleHandler : MonoBehaviour
                 // Stops Particles from continuing to collide and creating more joints
                 joint.enableCollision = false;
 
-                Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
+                //Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
                 if (this.aggregated == false)
                 {
-                    float dist = Vector3.Distance(initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
-                    Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
-                    writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime);
+                    float dist1 = Vector3.Distance(initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
+                    float dist2 = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
+                    //Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist1 + ".");
+                    writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime, dist1, dist2);
                 }
                 if (collision.gameObject.GetComponent<ParticleHandler>().aggregated == false)
                 {
                     float dist = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
-                    Debug.Log(collision.gameObject.name + " survival time was: " + (collision.gameObject.GetComponent<ParticleHandler>().survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
+                    //Debug.Log(collision.gameObject.name + " survival time was: " + (collision.gameObject.GetComponent<ParticleHandler>().survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
                 }
                 
                 this.aggregated = true;
