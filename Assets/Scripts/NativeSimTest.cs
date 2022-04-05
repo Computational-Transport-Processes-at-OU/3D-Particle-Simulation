@@ -9,7 +9,7 @@ public class NativeSimTest : MonoBehaviour
 {
     internal static System.Random rand = new System.Random();
 
-    public int numberOfParticles = 2000; // Specify how many particles to show 
+    public int numberOfParticles = 1000; // Specify how many particles to show 
     public float velocityScale;
     public int numberOfRestarts;
     public double[] aggregationRates;
@@ -352,7 +352,6 @@ public class NativeSimTest : MonoBehaviour
         topThreshold = velocityScalars[velocityScalars.Count / 2 + velocityScalars.Count / 4];
 
         String startTime = DateTime.Now.ToString("t", CultureInfo.GetCultureInfo("es-ES")).Replace(":","");
-        //System.IO.File.Create("aggregations_" + startTime + ".csv");
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < numberOfParticles; ++i)
         {
@@ -370,7 +369,6 @@ public class NativeSimTest : MonoBehaviour
                 --numberOfRestarts;
                 double rate = aggregationRates[aggregationRates.Length - numberOfRestarts];
                 String startTime = DateTime.Now.ToString("t", CultureInfo.GetCultureInfo("es-ES")).Replace(":", "");
-                //System.IO.File.Create("aggregations_" + startTime + ".csv");
                 Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
                 for (int i = 0; i < numberOfParticles; ++i)
                 {
@@ -378,6 +376,21 @@ public class NativeSimTest : MonoBehaviour
                 }
             }
         }
+    }
+    
+    // Helper function to get the number of particles that have not aggregated
+    internal static int getNumNonAggregates()
+    {
+        GameObject[] particles = GameObject.FindGameObjectsWithTag("Particle");
+        int numAggregates = 0;
+        foreach (GameObject particle in particles)
+        {
+            if (particle.GetComponent<ParticleHandler>().aggregated)
+            {
+                ++numAggregates;
+            }
+        }
+        return particles.Length - numAggregates;
     }
 }
 

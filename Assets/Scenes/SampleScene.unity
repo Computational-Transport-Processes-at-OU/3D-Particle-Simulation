@@ -161,7 +161,7 @@ MonoBehaviour:
   - 0.4
   - 0.3
   - 0.2
-  geometryFilePath: Data/Benthiemer_3d_reconstruction_200.txt
+  geometryFilePath: Data/Benthiemer_3d_reconstruction.txt
   velocityFilePath: Data/Benthiemer_velocity_field.txt
   voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}
   geometryPhysic: {fileID: 13400000, guid: 40f7fe1393a185948851980b23dda12a, type: 2}

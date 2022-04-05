@@ -160,9 +160,9 @@ public class ParticleHandler : MonoBehaviour
         //Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
 
         // Particles will stick together based on their aggregation rate, used as a probability of joining.
-        if (rand.NextDouble() < aggregationRate)
+        if (collision.gameObject.tag == "Particle") 
         {
-            if (collision.gameObject.tag == "Particle")
+            if (rand.NextDouble() < aggregationRate)
             {
                 FixedJoint joint = gameObject.AddComponent<FixedJoint>();
                 // Sets joint position to point of contact
@@ -173,6 +173,8 @@ public class ParticleHandler : MonoBehaviour
                 joint.enableCollision = false;
 
                 //Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
+                int nonAggregates = NativeSimTest.getNumNonAggregates();
+                Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
                 if (this.aggregated == false)
                 {
                     float dist1 = Vector3.Distance(initialPos, collision.gameObject.GetComponent<Rigidbody>().position);

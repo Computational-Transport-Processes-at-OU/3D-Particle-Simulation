@@ -1,7 +1,5 @@
 TASKS TODO:
 
-[ ] Write analytics data to a file
-[ ] Track nunber of particles that are not aggregated
 [ ] Find out why red is only coloring one face of cube
 [ ] Improve velocity interpolation
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
@@ -23,3 +21,5 @@ TASKS DONE:
 [*] Check if X,Y,Z are ordered correctly
 [*] Store initial position, calculate survival distance
 [*] Find out why some survival times stay at 0.02 sec. Some particles' times are not being incremented
+[*] Write analytics data to a file
+[*] Track nunber of particles that are not aggregated
