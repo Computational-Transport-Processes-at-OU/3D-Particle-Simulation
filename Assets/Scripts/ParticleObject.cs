@@ -6,6 +6,10 @@ using UnityEngine;
 public class ParticleObject
 {
     System.Random rand = NativeSimTest.rand;
+    GameObject particle;
+    Vector3 initialPos;
+    double aggregationRate;
+    float velocityScale;
 
     /*
      * This function will randomly generate a Vector3 position on the x = -30 plane, 
@@ -20,11 +24,11 @@ public class ParticleObject
         // Directions so the edge of the particle spheres don't hit the geometry
         while (true)
         {
-            if (data.GetIntensityAt(1, (int)y++, (int)z++) >= 7500f || data.GetIntensityAt(1, (int)y++, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y, (int)z++) >= 7500f || data.GetIntensityAt(1, (int)y, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y--, (int)z--) >= 7500f || data.GetIntensityAt(1, (int)y--, (int)z) >= 7500f ||
-                data.GetIntensityAt(1, (int)y, (int)z--) >= 7500f || data.GetIntensityAt(1, (int)y++, (int)z--) >= 7500f ||
-                data.GetIntensityAt(1, (int)y--, (int)z++) >= 7500f)
+            if (data.GetIntensityAt(1, (int)y++, (int)z++) > 0 || data.GetIntensityAt(1, (int)y++, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z++) > 0 || data.GetIntensityAt(1, (int)y, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z--) > 0 || data.GetIntensityAt(1, (int)y--, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z--) > 0 || data.GetIntensityAt(1, (int)y++, (int)z--) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z++) > 0)
             {
                 // Regenerate the random numbers
                 y = (float)(rand.NextDouble() * (199 - 1) + 1);
@@ -35,13 +39,14 @@ public class ParticleObject
                 break;
             }
         }
-        return new Vector3(1, y, z);
+        initialPos = new Vector3(1, y, z);
+        return initialPos;
     }
 
     // Constructor. Creates a new Sphere GameObject
-    public ParticleObject(int index, PhysicMaterial geometryPhysic, GeometryData geometryData)
+    public ParticleObject(int index, double aggregationRate, float velocityScale, PhysicMaterial geometryPhysic, GeometryData geometryData, String startTime)
     {
-        GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
         particle.tag = "Particle";
         particle.GetComponent<SphereCollider>().sharedMaterial = geometryPhysic;
@@ -50,6 +55,14 @@ public class ParticleObject
         rbody.useGravity = false;
         // Random x velocity between 1.0 and 5.0
         rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
-        particle.AddComponent<ParticleHandler>();
+
+        this.aggregationRate = aggregationRate;
+        this.velocityScale = velocityScale;
+
+        ParticleHandler handler = particle.AddComponent<ParticleHandler>();
+        handler.initialPos = initialPos;
+        handler.aggregationRate = aggregationRate;
+        handler.velocityScale = velocityScale;
+        handler.startTime = startTime;
     }
 }

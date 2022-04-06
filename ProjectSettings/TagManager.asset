@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Particle
   - Geometry
+  - Space
   layers:
   - Default
   - TransparentFX
