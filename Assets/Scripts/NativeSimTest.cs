@@ -382,6 +382,7 @@ public class NativeSimTest : MonoBehaviour
     internal static int getNumNonAggregates()
     {
         GameObject[] particles = GameObject.FindGameObjectsWithTag("Particle");
+        List<GameObject> destroyedParticles = new List<GameObject>();
         int numAggregates = 0;
         foreach (GameObject particle in particles)
         {
@@ -389,8 +390,16 @@ public class NativeSimTest : MonoBehaviour
             {
                 ++numAggregates;
             }
+            else
+            {
+                // Don't want to subtract destroyed particles from the non-aggregate count
+                if (particle.GetComponent<ParticleHandler>().destroyed)
+                {
+                    destroyedParticles.Add(particle);
+                }
+            }
         }
-        return particles.Length - numAggregates;
+        return (particles.Length + destroyedParticles.Count) - numAggregates;
     }
 }
 

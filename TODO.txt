@@ -26,3 +26,4 @@ TASKS DONE:
 [*] Write analytics data to a file
 [*] Track nunber of particles that are not aggregated
 [*] Distances are not lining up. Why? I think updating survival distance incorrectly.
+[*] Do not subtract deleted particles from non-aggregated count
