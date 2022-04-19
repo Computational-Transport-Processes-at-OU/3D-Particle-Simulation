@@ -27,6 +27,7 @@ public class NativeSimTest : MonoBehaviour
     GameObject geometryGameObject = null;
     GameObject spaceGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
+    internal static List<Vector3> occupiedPositions = new List<Vector3>();
 
     // These three variables store the particle speed quartile thresholds
     internal static float topThreshold = 0;
@@ -91,8 +92,8 @@ public class NativeSimTest : MonoBehaviour
                         // EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) >= cutoff || vdata.GetVelocityAt(i - 1, j, k).x >= 0f);
+                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) >= cutoff || vdata.GetVelocityAt(i + 1, j, k).x >= 0f);
                         }
 
                         else
@@ -112,8 +113,8 @@ public class NativeSimTest : MonoBehaviour
                         // EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) >= cutoff || vdata.GetVelocityAt(i, j - 1, k).x >= 0f);
+                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) >= cutoff || vdata.GetVelocityAt(i, j + 1, k).x >= 0f);
                         }
 
                         else
@@ -133,8 +134,8 @@ public class NativeSimTest : MonoBehaviour
                         // TODO: EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) >= cutoff || vdata.GetVelocityAt(i, j, k - 1).x >= 0f);
+                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) >= cutoff || vdata.GetVelocityAt(i, j, k + 1).x >= 0f);
                         }
 
                         else
