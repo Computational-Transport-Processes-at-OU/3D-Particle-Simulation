@@ -177,8 +177,12 @@ public class ParticleHandler : MonoBehaviour
                 joint.enableCollision = false;
 
                 //Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
-                int nonAggregates = NativeSimTest.getNumNonAggregates();
-                Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
+                if (!this.aggregated || !collision.gameObject.GetComponent<ParticleHandler>().aggregated)
+                {
+                    int nonAggregates = NativeSimTest.getNumNonAggregates();
+                    Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
+                }
+                
                 if (this.aggregated == false)
                 {
                     if (collision.gameObject.GetComponent<ParticleHandler>().survivalDist == -1f)

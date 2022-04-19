@@ -9,7 +9,11 @@ public class NativeSimTest : MonoBehaviour
 {
     internal static System.Random rand = new System.Random();
 
+    // Public variables that can be set in the Editor
+    public bool disableCollidingSpawns;
     public int numberOfParticles = 1000; // Specify how many particles to show 
+    public float particleAngularDrag;
+    public float particleDrag;
     public float velocityScale;
     public int numberOfRestarts;
     public double[] aggregationRates;
@@ -355,7 +359,7 @@ public class NativeSimTest : MonoBehaviour
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < numberOfParticles; ++i)
         {
-            new ParticleObject(i, aggregationRates[0], velocityScale, geometryPhysic, geometryData, startTime);
+            new ParticleObject(i, aggregationRates[0], particleAngularDrag, particleDrag, velocityScale, geometryPhysic, geometryData, startTime, disableCollidingSpawns);
         }
     }
 
@@ -372,7 +376,7 @@ public class NativeSimTest : MonoBehaviour
                 Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
                 for (int i = 0; i < numberOfParticles; ++i)
                 {
-                    new ParticleObject(i, rate, velocityScale, geometryPhysic, geometryData, startTime);
+                    new ParticleObject(i, rate, particleAngularDrag, particleDrag, velocityScale, geometryPhysic, geometryData, startTime, disableCollidingSpawns);
                 }
             }
         }

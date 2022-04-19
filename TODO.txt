@@ -27,3 +27,4 @@ TASKS DONE:
 [*] Track nunber of particles that are not aggregated
 [*] Distances are not lining up. Why? I think updating survival distance incorrectly.
 [*] Do not subtract deleted particles from non-aggregated count
+[*] Make particles not spawn in the same position. Option to set drag? Test if particles will collide with no other forces.
