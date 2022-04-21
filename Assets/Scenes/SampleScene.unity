@@ -164,6 +164,7 @@ MonoBehaviour:
   - 0.4
   - 0.3
   - 0.2
+  colorNegativeVelocity: 1
   geometryFilePath: Data/Benthiemer_3d_reconstruction.txt
   velocityFilePath: Data/Benthiemer_velocity_field.txt
   voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}

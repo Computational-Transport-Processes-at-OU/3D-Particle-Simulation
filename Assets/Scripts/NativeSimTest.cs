@@ -17,6 +17,7 @@ public class NativeSimTest : MonoBehaviour
     public float velocityScale;
     public int numberOfRestarts;
     public double[] aggregationRates;
+    public bool colorNegativeVelocity;
     public string geometryFilePath = "";
     public string velocityFilePath = "";
     public Material voxelMaterial = null;
@@ -338,15 +339,17 @@ public class NativeSimTest : MonoBehaviour
         //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
 
         // Generate cube data for any coordinates where the x velocity is negative
-        vertices = new List<CubeGenerator.Coordinate>();
-        indices = new List<int>();
-        BuildCubesNew(geometryData, velocityData, vertices, indices, true);
-        // Add the mesh data as child GameObjects of a "Geometry" GameObject.
-        spaceGameObject = new GameObject("Space");
-        spaceGameObject.transform.SetParent(gameObject.transform);
-        AddMeshToObject(spaceGameObject, vertices, indices, true);
-
-
+        if (colorNegativeVelocity)
+        {
+            vertices = new List<CubeGenerator.Coordinate>();
+            indices = new List<int>();
+            BuildCubesNew(geometryData, velocityData, vertices, indices, true);
+            // Add the mesh data as child GameObjects of a "Geometry" GameObject.
+            spaceGameObject = new GameObject("Space");
+            spaceGameObject.transform.SetParent(gameObject.transform);
+            AddMeshToObject(spaceGameObject, vertices, indices, true);
+        }
+        
         // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
         List<float> velocityScalars = velocityData.magnitudes.Select(m => m / velocityScale).ToList();
         // Ignore zero magnitudes
