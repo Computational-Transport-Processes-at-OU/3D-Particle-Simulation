@@ -6,21 +6,25 @@ using UnityEngine;
 
 public class ParticleHandler : MonoBehaviour
 {
+    // Important vars for simulation function
     System.Random rand = NativeSimTest.rand;
-
     static bool destroyOutOfBounds = true;
-    private bool destroyed = false;
     FluidVelocityData velocityData = NativeSimTest.velocityData;
-    // These four variables store the particle speed quartile thresholds
+    internal double aggregationRate;
+    internal float velocityScale;
+    internal bool aggregated = false; 
+    internal bool destroyed = false;
+
+    // These three variables store the particle speed quartile thresholds
     float topThreshold = Mathf.Pow(NativeSimTest.topThreshold, 2);
     float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
     float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
+    
+    // Other member vars for data tracking purposes
     internal Vector3 initialPos;
-    internal double aggregationRate;
-    internal float velocityScale;
-    internal long survivalTime;
-    internal bool aggregated = false;
     internal String startTime;
+    internal long survivalTime = 0;
+    private float survivalDist = -1f;
 
     // Helper function to write aggregation times to a csv file
     void writeToFile(string particle1, string particle2, float p1SurvivalTime, float p2SurvivalTime, float p1SurvivalDist, float p2SurvivalDist)
@@ -173,19 +177,24 @@ public class ParticleHandler : MonoBehaviour
                 joint.enableCollision = false;
 
                 //Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
-                int nonAggregates = NativeSimTest.getNumNonAggregates();
-                Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
+                if (!this.aggregated || !collision.gameObject.GetComponent<ParticleHandler>().aggregated)
+                {
+                    int nonAggregates = NativeSimTest.getNumNonAggregates();
+                    Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
+                }
+                
                 if (this.aggregated == false)
                 {
-                    float dist1 = Vector3.Distance(initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
-                    float dist2 = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
-                    //Debug.Log(this.gameObject.name + " survival time was: " + (survivalTime * 0.02) + " seconds. Survival distance was: " + dist1 + ".");
-                    writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime, dist1, dist2);
+                    if (collision.gameObject.GetComponent<ParticleHandler>().survivalDist == -1f)
+                    {
+                        collision.gameObject.GetComponent<ParticleHandler>().survivalDist = Vector3.Distance(collision.gameObject.GetComponent<ParticleHandler>().initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
+                    }
+                    this.survivalDist = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
+                    writeToFile(this.gameObject.name, collision.gameObject.name, this.survivalTime, collision.gameObject.GetComponent<ParticleHandler>().survivalTime, this.survivalDist, collision.gameObject.GetComponent<ParticleHandler>().survivalDist);
                 }
                 if (collision.gameObject.GetComponent<ParticleHandler>().aggregated == false)
                 {
-                    float dist = Vector3.Distance(initialPos, this.gameObject.GetComponent<Rigidbody>().position);
-                    //Debug.Log(collision.gameObject.name + " survival time was: " + (collision.gameObject.GetComponent<ParticleHandler>().survivalTime * 0.02) + " seconds. Survival distance was: " + dist + ".");
+                    collision.gameObject.GetComponent<ParticleHandler>().survivalDist = Vector3.Distance(collision.gameObject.GetComponent<ParticleHandler>().initialPos, collision.gameObject.GetComponent<Rigidbody>().position);
                 }
                 
                 this.aggregated = true;

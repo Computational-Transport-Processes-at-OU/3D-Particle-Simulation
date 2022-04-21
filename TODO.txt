@@ -1,6 +1,5 @@
 TASKS TODO:
 
-[ ] Find out why red is only coloring one face of cube
 [ ] Improve velocity interpolation
 [ ] Refine Update to keep Particles from jumping around when they get reset; possibly store their initial point and reset when they leave bounds
 [ ] Write README
@@ -23,3 +22,7 @@ TASKS DONE:
 [*] Find out why some survival times stay at 0.02 sec. Some particles' times are not being incremented
 [*] Write analytics data to a file
 [*] Track nunber of particles that are not aggregated
+[*] Distances are not lining up. Why? I think updating survival distance incorrectly.
+[*] Do not subtract deleted particles from non-aggregated count
+[*] Make particles not spawn in the same position. Option to set drag? Test if particles will collide with no other forces.
+[*] Find out why red is only coloring one face of cube. Maybe start by placing particles where v_x < 0 to make sure we know where negative velocity is. 

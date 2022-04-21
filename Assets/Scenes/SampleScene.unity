@@ -153,7 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f7de65d6e22084d9c858f4ab1fc36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableCollidingSpawns: 1
   numberOfParticles: 1000
+  particleAngularDrag: 0
+  particleDrag: 0
   velocityScale: 0.005
   numberOfRestarts: 4
   aggregationRates:
@@ -161,6 +164,7 @@ MonoBehaviour:
   - 0.4
   - 0.3
   - 0.2
+  colorNegativeVelocity: 1
   geometryFilePath: Data/Benthiemer_3d_reconstruction.txt
   velocityFilePath: Data/Benthiemer_velocity_field.txt
   voxelMaterial: {fileID: 2100000, guid: bd822fdfaeff28e499e2f5db8f1a0fa6, type: 2}
@@ -675,7 +679,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: -10, y: 100, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -15,7 +15,7 @@ public class ParticleObject
      * This function will randomly generate a Vector3 position on the x = -30 plane, 
      * as long as there are no solid cubes at x = 1.
      */
-    private Vector3 GetRandomPosition(GeometryData data)
+    private Vector3 GetRandomPosition(GeometryData data, bool disableCollidingSpawns)
     {
         float y = (float)(rand.NextDouble() * (199 - 1) + 1);
         float z = (float)(rand.NextDouble() * (199 - 1) + 1);
@@ -24,19 +24,55 @@ public class ParticleObject
         // Directions so the edge of the particle spheres don't hit the geometry
         while (true)
         {
-            if (data.GetIntensityAt(1, (int)y++, (int)z++) > 0 || data.GetIntensityAt(1, (int)y++, (int)z) > 0 ||
+            // This determines whether or not to prevent particles from spawning in the same position
+            if (disableCollidingSpawns)
+            {
+                if (data.GetIntensityAt(1, (int)y++, (int)z++) > 0 || data.GetIntensityAt(1, (int)y++, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z++) > 0 || data.GetIntensityAt(1, (int)y, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z--) > 0 || data.GetIntensityAt(1, (int)y--, (int)z) > 0 ||
+                data.GetIntensityAt(1, (int)y, (int)z--) > 0 || data.GetIntensityAt(1, (int)y++, (int)z--) > 0 ||
+                data.GetIntensityAt(1, (int)y--, (int)z++) > 0 ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z--))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z++))) ||
+
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z--))) ||
+                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z++))))
+                {
+                    // Regenerate the random numbers
+                    y = (float)(rand.NextDouble() * (199 - 1) + 1);
+                    z = (float)(rand.NextDouble() * (199 - 1) + 1);
+                }
+                else
+                {
+                    NativeSimTest.occupiedPositions.Add(new Vector3(1, y, z));
+                    break;
+                }
+            }
+            // Otherwise only look at the solid geometry
+            else
+            {
+                if (data.GetIntensityAt(1, (int)y++, (int)z++) > 0 || data.GetIntensityAt(1, (int)y++, (int)z) > 0 ||
                 data.GetIntensityAt(1, (int)y, (int)z++) > 0 || data.GetIntensityAt(1, (int)y, (int)z) > 0 ||
                 data.GetIntensityAt(1, (int)y--, (int)z--) > 0 || data.GetIntensityAt(1, (int)y--, (int)z) > 0 ||
                 data.GetIntensityAt(1, (int)y, (int)z--) > 0 || data.GetIntensityAt(1, (int)y++, (int)z--) > 0 ||
                 data.GetIntensityAt(1, (int)y--, (int)z++) > 0)
-            {
-                // Regenerate the random numbers
-                y = (float)(rand.NextDouble() * (199 - 1) + 1);
-                z = (float)(rand.NextDouble() * (199 - 1) + 1);
-            }
-            else
-            {
-                break;
+                {
+                    // Regenerate the random numbers
+                    y = (float)(rand.NextDouble() * (199 - 1) + 1);
+                    z = (float)(rand.NextDouble() * (199 - 1) + 1);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
         initialPos = new Vector3(1, y, z);
@@ -44,17 +80,18 @@ public class ParticleObject
     }
 
     // Constructor. Creates a new Sphere GameObject
-    public ParticleObject(int index, double aggregationRate, float velocityScale, PhysicMaterial geometryPhysic, GeometryData geometryData, String startTime)
+    public ParticleObject(int index, double aggregationRate, float velocityScale, float particleAngularDrag, float particleDrag, 
+                            PhysicMaterial geometryPhysic, GeometryData geometryData, String startTime, bool disableCollidingSpawns)
     {
         particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         particle.name = "Particle " + index;
         particle.tag = "Particle";
         particle.GetComponent<SphereCollider>().sharedMaterial = geometryPhysic;
         Rigidbody rbody = particle.AddComponent<Rigidbody>();
-        rbody.position = GetRandomPosition(geometryData);
+        rbody.position = GetRandomPosition(geometryData, disableCollidingSpawns);
         rbody.useGravity = false;
-        // Random x velocity between 1.0 and 5.0
-        rbody.velocity = new Vector3((float)(rand.NextDouble() * (5 - 1) + 1), 0f, 0f);
+        rbody.angularDrag = particleAngularDrag;
+        rbody.drag = particleDrag;
 
         this.aggregationRate = aggregationRate;
         this.velocityScale = velocityScale;

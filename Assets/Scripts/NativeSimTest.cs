@@ -9,10 +9,15 @@ public class NativeSimTest : MonoBehaviour
 {
     internal static System.Random rand = new System.Random();
 
+    // Public variables that can be set in the Editor
+    public bool disableCollidingSpawns;
     public int numberOfParticles = 1000; // Specify how many particles to show 
+    public float particleAngularDrag;
+    public float particleDrag;
     public float velocityScale;
     public int numberOfRestarts;
     public double[] aggregationRates;
+    public bool colorNegativeVelocity;
     public string geometryFilePath = "";
     public string velocityFilePath = "";
     public Material voxelMaterial = null;
@@ -23,6 +28,7 @@ public class NativeSimTest : MonoBehaviour
     GameObject geometryGameObject = null;
     GameObject spaceGameObject = null;
     internal static FluidVelocityData velocityData = new FluidVelocityData();
+    internal static List<Vector3> occupiedPositions = new List<Vector3>();
 
     // These three variables store the particle speed quartile thresholds
     internal static float topThreshold = 0;
@@ -87,8 +93,8 @@ public class NativeSimTest : MonoBehaviour
                         // EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (i > 0) prev_empty = (data.GetIntensityAt(i - 1, j, k) >= cutoff || vdata.GetVelocityAt(i - 1, j, k).x >= 0f);
+                            if (i < data.iMax - 1) next_empty = (data.GetIntensityAt(i + 1, j, k) >= cutoff || vdata.GetVelocityAt(i + 1, j, k).x >= 0f);
                         }
 
                         else
@@ -108,8 +114,8 @@ public class NativeSimTest : MonoBehaviour
                         // EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (j > 0) prev_empty = (data.GetIntensityAt(i, j - 1, k) >= cutoff || vdata.GetVelocityAt(i, j - 1, k).x >= 0f);
+                            if (j < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j + 1, k) >= cutoff || vdata.GetVelocityAt(i, j + 1, k).x >= 0f);
                         }
 
                         else
@@ -129,8 +135,8 @@ public class NativeSimTest : MonoBehaviour
                         // TODO: EXPLAIN
                         if (colorOpenSpace)
                         {
-                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
-                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) >= cutoff || vdata.GetVelocityAt(i, j, k).x >= 0f);
+                            if (k > 0) prev_empty = (data.GetIntensityAt(i, j, k - 1) >= cutoff || vdata.GetVelocityAt(i, j, k - 1).x >= 0f);
+                            if (k < data.jMax - 1) next_empty = (data.GetIntensityAt(i, j, k + 1) >= cutoff || vdata.GetVelocityAt(i, j, k + 1).x >= 0f);
                         }
 
                         else
@@ -333,15 +339,17 @@ public class NativeSimTest : MonoBehaviour
         //CubeGenerator.SaveWavefrontOBJ("cubes.obj", vertices, indices);
 
         // Generate cube data for any coordinates where the x velocity is negative
-        vertices = new List<CubeGenerator.Coordinate>();
-        indices = new List<int>();
-        BuildCubesNew(geometryData, velocityData, vertices, indices, true);
-        // Add the mesh data as child GameObjects of a "Geometry" GameObject.
-        spaceGameObject = new GameObject("Space");
-        spaceGameObject.transform.SetParent(gameObject.transform);
-        AddMeshToObject(spaceGameObject, vertices, indices, true);
-
-
+        if (colorNegativeVelocity)
+        {
+            vertices = new List<CubeGenerator.Coordinate>();
+            indices = new List<int>();
+            BuildCubesNew(geometryData, velocityData, vertices, indices, true);
+            // Add the mesh data as child GameObjects of a "Geometry" GameObject.
+            spaceGameObject = new GameObject("Space");
+            spaceGameObject.transform.SetParent(gameObject.transform);
+            AddMeshToObject(spaceGameObject, vertices, indices, true);
+        }
+        
         // Separate the velocity magnitudes into quarters to be used to define particle colors in ParticleHandler
         List<float> velocityScalars = velocityData.magnitudes.Select(m => m / velocityScale).ToList();
         // Ignore zero magnitudes
@@ -355,7 +363,7 @@ public class NativeSimTest : MonoBehaviour
         Debug.Log("Beginning simulation! The simulation will restart " + numberOfRestarts + " times. The initial aggregation rate is: " + aggregationRates[0] + ".");
         for (int i = 0; i < numberOfParticles; ++i)
         {
-            new ParticleObject(i, aggregationRates[0], velocityScale, geometryPhysic, geometryData, startTime);
+            new ParticleObject(i, aggregationRates[0], particleAngularDrag, particleDrag, velocityScale, geometryPhysic, geometryData, startTime, disableCollidingSpawns);
         }
     }
 
@@ -372,7 +380,7 @@ public class NativeSimTest : MonoBehaviour
                 Debug.Log("Respawning particles! There are " + numberOfRestarts + " restarts left. The aggregation rate is now: " + rate + ".");
                 for (int i = 0; i < numberOfParticles; ++i)
                 {
-                    new ParticleObject(i, rate, velocityScale, geometryPhysic, geometryData, startTime);
+                    new ParticleObject(i, rate, particleAngularDrag, particleDrag, velocityScale, geometryPhysic, geometryData, startTime, disableCollidingSpawns);
                 }
             }
         }
@@ -382,6 +390,7 @@ public class NativeSimTest : MonoBehaviour
     internal static int getNumNonAggregates()
     {
         GameObject[] particles = GameObject.FindGameObjectsWithTag("Particle");
+        List<GameObject> destroyedParticles = new List<GameObject>();
         int numAggregates = 0;
         foreach (GameObject particle in particles)
         {
@@ -389,8 +398,16 @@ public class NativeSimTest : MonoBehaviour
             {
                 ++numAggregates;
             }
+            else
+            {
+                // Don't want to subtract destroyed particles from the non-aggregate count
+                if (particle.GetComponent<ParticleHandler>().destroyed)
+                {
+                    destroyedParticles.Add(particle);
+                }
+            }
         }
-        return particles.Length - numAggregates;
+        return (particles.Length + destroyedParticles.Count) - numAggregates;
     }
 }
 
