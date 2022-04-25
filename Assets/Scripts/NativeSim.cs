@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NativeSimTest : MonoBehaviour
+public class NativeSim : MonoBehaviour
 {
     internal static System.Random rand = new System.Random();
 

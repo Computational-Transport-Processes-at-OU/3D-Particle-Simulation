@@ -7,18 +7,18 @@ using UnityEngine;
 public class ParticleHandler : MonoBehaviour
 {
     // Important vars for simulation function
-    System.Random rand = NativeSimTest.rand;
+    System.Random rand = NativeSim.rand;
     static bool destroyOutOfBounds = true;
-    FluidVelocityData velocityData = NativeSimTest.velocityData;
+    FluidVelocityData velocityData = NativeSim.velocityData;
     internal double aggregationRate;
     internal float velocityScale;
     internal bool aggregated = false; 
     internal bool destroyed = false;
 
     // These three variables store the particle speed quartile thresholds
-    float topThreshold = Mathf.Pow(NativeSimTest.topThreshold, 2);
-    float midThreshold = Mathf.Pow(NativeSimTest.midThreshold, 2);
-    float bottomThreshold = Mathf.Pow(NativeSimTest.bottomThreshold, 2);
+    float topThreshold = Mathf.Pow(NativeSim.topThreshold, 2);
+    float midThreshold = Mathf.Pow(NativeSim.midThreshold, 2);
+    float bottomThreshold = Mathf.Pow(NativeSim.bottomThreshold, 2);
     
     // Other member vars for data tracking purposes
     internal Vector3 initialPos;
@@ -179,7 +179,7 @@ public class ParticleHandler : MonoBehaviour
                 //Debug.Log(this.gameObject.name + " and " + collision.gameObject.name + " have collided and joined!");
                 if (!this.aggregated || !collision.gameObject.GetComponent<ParticleHandler>().aggregated)
                 {
-                    int nonAggregates = NativeSimTest.getNumNonAggregates();
+                    int nonAggregates = NativeSim.getNumNonAggregates();
                     Debug.Log("There are currently " + nonAggregates + " particles that are not aggregated!");
                 }
                 

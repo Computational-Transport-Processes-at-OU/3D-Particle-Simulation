@@ -11,7 +11,7 @@ support 2^16 (= ~65k) vertices in a mesh. We therefore may have the split
 the "stacked cube" system geometry up into multiple meshes!
 */
 
-public class Test : MonoBehaviour
+public class PlaybackTest : MonoBehaviour
 {
     public string geometryFilePath = "3D_reconstruction_NEW.txt";
     public string trajectoryFilePath = "Particle_trajectories_THOUSAND.txt";

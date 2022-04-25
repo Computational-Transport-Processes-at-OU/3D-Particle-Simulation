@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ParticleObject
 {
-    System.Random rand = NativeSimTest.rand;
+    System.Random rand = NativeSim.rand;
     GameObject particle;
     Vector3 initialPos;
     double aggregationRate;
@@ -32,19 +32,19 @@ public class ParticleObject
                 data.GetIntensityAt(1, (int)y--, (int)z--) > 0 || data.GetIntensityAt(1, (int)y--, (int)z) > 0 ||
                 data.GetIntensityAt(1, (int)y, (int)z--) > 0 || data.GetIntensityAt(1, (int)y++, (int)z--) > 0 ||
                 data.GetIntensityAt(1, (int)y--, (int)z++) > 0 ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z--))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z++))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z++))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z++))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y), (int)Math.Floor(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y++), (int)Math.Floor(z--))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Floor(y--), (int)Math.Floor(z++))) ||
 
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z++))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z--))) ||
-                NativeSimTest.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z++))))
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z++))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z++))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y), (int)Math.Ceiling(z--))) || NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y++), (int)Math.Ceiling(z--))) ||
+                NativeSim.occupiedPositions.Contains(new Vector3(1, (int)Math.Ceiling(y--), (int)Math.Ceiling(z++))))
                 {
                     // Regenerate the random numbers
                     y = (float)(rand.NextDouble() * (199 - 1) + 1);
@@ -52,7 +52,7 @@ public class ParticleObject
                 }
                 else
                 {
-                    NativeSimTest.occupiedPositions.Add(new Vector3(1, y, z));
+                    NativeSim.occupiedPositions.Add(new Vector3(1, y, z));
                     break;
                 }
             }
