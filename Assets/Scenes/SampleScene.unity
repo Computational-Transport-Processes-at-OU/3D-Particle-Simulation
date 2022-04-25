@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f7de65d6e22084d9c858f4ab1fc36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableCollidingSpawns: 0
+  disableCollidingSpawns: 1
   numberOfParticles: 1000
   particleAngularDrag: 0
   particleDrag: 0
