@@ -16,4 +16,6 @@ In order to run the program, one will have to install and setup the free [Unity 
 * WASD keys to move
 * Mouse to look
 * Space to fly up
-* Shift to fly down   
+* Shift to fly down
+![image](https://user-images.githubusercontent.com/47228153/165366083-dc75ac03-4455-4d9e-b45d-7d9a33fea785.png)
+   
