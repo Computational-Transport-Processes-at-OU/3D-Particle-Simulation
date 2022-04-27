@@ -18,4 +18,12 @@ In order to run the program, one will have to install and setup the free [Unity 
 * Space to fly up
 * Shift to fly down
 ![image](https://user-images.githubusercontent.com/47228153/165366083-dc75ac03-4455-4d9e-b45d-7d9a33fea785.png)
-   
+
+## Demonstration Videos
+See the following links for brief videos showcasing two different porous media, with various parameters applied.
+* [Random Sphere Packing - Empty](https://mymedia.ou.edu/media/Random+Sphere+Packing+-+Empty/1_6psqqeul)
+* [Random Sphere Packing - Particles](https://mymedia.ou.edu/media/Random+Sphere+Packing+-++Particles/1_u5dflwyu)
+* [Random Sphere Packing - Particles and Negative Velocity Colors](https://mymedia.ou.edu/media/Random+Sphere+Packing+-+Particles+and+Negative+Velocity+Colors/1_z2hlrnmd)
+* [Benthiemer Sandstone - Empty](https://mymedia.ou.edu/media/Benthiemer+Sandstone+-+Empty/1_n5re2oz9)
+* [Benthiemer Sandstone - Particles](https://mymedia.ou.edu/media/Benthiemer+Sandstone+-++Particles/1_feur852e)
+* [Benthiemer Sandstone - Particles and Negative Velocity Colors](https://mymedia.ou.edu/media/Benthiemer+Sandstone+-+Particles+and+Negative+Velocity+Colors/1_d5jzbia6)
